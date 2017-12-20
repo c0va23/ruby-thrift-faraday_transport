@@ -80,14 +80,14 @@ RSpec.describe Thrift::FaradayTransport do
     context 'with transport not have path' do
       let(:transport) { described_class.new(faraday_connection) }
 
-      before do
+      before 'prepare flush' do
         transport.write(request_body)
         faraday_stabs.post('/', request_body, headers) do |_env|
           [200, described_class::BASE_HEADERS, response_body]
         end
       end
 
-      it 'call post thrift data via adapter' do
+      it 'allow read valid response body' do
         flush
         expect(transport.read(response_body.size)).to eq response_body
       end
@@ -97,14 +97,41 @@ RSpec.describe Thrift::FaradayTransport do
       let(:path) { '/custom/prefix' }
       let(:transport) { described_class.new(faraday_connection, path: path) }
 
-      before do
+      before 'prepare flush' do
         transport.write(request_body)
         faraday_stabs.post(path, request_body, headers) do |_env|
           [200, described_class::BASE_HEADERS, response_body]
         end
       end
 
-      it 'call post thrift data via adapter' do
+      it 'allow read valid response body' do
+        flush
+        expect(transport.read(response_body.size)).to eq response_body
+      end
+    end
+
+    context 'when flush called not first time' do
+      let(:transport) { described_class.new(faraday_connection) }
+      let(:other_request_body) { SecureRandom.random_bytes(20) }
+      let(:other_response_body) { SecureRandom.random_bytes(40) }
+
+      before 'first flush' do
+        faraday_stabs.post('/', other_request_body, headers) do |_env|
+          [200, described_class::BASE_HEADERS, other_response_body]
+        end
+        transport.write(other_request_body)
+        transport.flush
+        transport.read(other_response_body.size)
+      end
+
+      before 'prepare flush' do
+        faraday_stabs.post('/', request_body, headers) do |_env|
+          [200, described_class::BASE_HEADERS, response_body]
+        end
+        transport.write(request_body)
+      end
+
+      it 'allow read valid response body' do
         flush
         expect(transport.read(response_body.size)).to eq response_body
       end

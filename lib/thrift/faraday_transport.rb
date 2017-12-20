@@ -19,7 +19,7 @@ module Thrift
     def initialize(faraday_connection, path: nil)
       @faraday_connection = faraday_connection
       @path = path
-      @outbuf = Bytes.empty_byte_buffer
+      flush_out_buffer
     end
 
     def open?
@@ -27,23 +27,29 @@ module Thrift
     end
 
     def write(data)
-      @outbuf << data
+      @out_buffer << data
     end
 
     def read(size)
-      @inbuf.read(size)
+      @in_buffer.read(size)
     end
 
     def flush
       response = @faraday_connection.post(path) do |request|
-        request.body = @outbuf
+        request.body = @out_buffer
         request.headers.merge!(BASE_HEADERS)
       end
-      @inbuf = StringIO.new(response.body)
+      @in_buffer = StringIO.new(response.body)
+      # ensure
+      flush_out_buffer
     end
 
     def path
       @path || DEFAULT_PATH
+    end
+
+    def flush_out_buffer
+      @out_buffer = Bytes.empty_byte_buffer
     end
   end
 end
