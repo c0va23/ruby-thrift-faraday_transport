@@ -3,8 +3,12 @@ require 'rspec/core/rake_task'
 
 RSpec::Core::RakeTask.new(:spec)
 
+require 'rubocop/rake_task'
+
+RuboCop::RakeTask.new
+
 # rubocop:disable Style/HashSyntax
 
-task :default => :spec
+task :default => %i[rubocop spec]
 
 # rubocop:enable Style/HashSyntax
