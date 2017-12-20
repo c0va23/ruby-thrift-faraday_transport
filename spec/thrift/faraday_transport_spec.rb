@@ -2,6 +2,10 @@ require 'spec_helper'
 require 'faraday'
 
 RSpec.describe Thrift::FaradayTransport do
+  subject { described_class.new(faraday_connection) }
+
+  let(:faraday_connection) { Faraday.new }
+
   it 'has a version number' do
     expect(described_class::VERSION).to eq(
       File.read(File.expand_path('../../VERSION', __dir__))
@@ -22,8 +26,6 @@ RSpec.describe Thrift::FaradayTransport do
     context 'with faraday connection' do
       subject(:transport) { described_class.new(faraday_connection) }
 
-      let(:faraday_connection) { Faraday.new }
-
       it { expect { transport }.not_to raise_error }
 
       it 'set faraday_connection' do
@@ -41,7 +43,6 @@ RSpec.describe Thrift::FaradayTransport do
       end
 
       let(:path) { 'custom prefix' }
-      let(:faraday_connection) { Faraday.new }
 
       it { expect { transport }.not_to raise_error }
 
@@ -53,5 +54,11 @@ RSpec.describe Thrift::FaradayTransport do
         expect(transport.path).to be path
       end
     end
+  end
+
+  describe '#open?' do
+    subject { super().open? }
+
+    it { is_expected.to be true }
   end
 end

@@ -16,5 +16,9 @@ module Thrift
       @faraday_connection = faraday_connection
       @path = path
     end
+
+    def open?
+      true
+    end
   end
 end
