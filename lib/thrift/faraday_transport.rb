@@ -7,8 +7,9 @@ module Thrift
   class FaradayTransport < Thrift::BaseTransport
     VERSION = Gem.loaded_specs['thrift-faraday_transport'].version.to_s
     BASE_HEADERS = { 'Content-Type' => 'application/x-thrift' }.freeze
+    DEFAULT_PATH = '/'.freeze
 
-    attr_reader :faraday_connection, :path
+    attr_reader :faraday_connection
 
     # Public: Initialize new FaradayTransport
     #
@@ -34,11 +35,15 @@ module Thrift
     end
 
     def flush
-      response = @faraday_connection.post do |request|
+      response = @faraday_connection.post(path) do |request|
         request.body = @outbuf
         request.headers.merge!(BASE_HEADERS)
       end
       @inbuf = StringIO.new(response.body)
+    end
+
+    def path
+      @path || DEFAULT_PATH
     end
   end
 end
