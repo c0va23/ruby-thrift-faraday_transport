@@ -6,8 +6,9 @@ RSpec.describe Thrift::FaradayTransport do
 
   let(:faraday_stabs) { Faraday::Adapter::Test::Stubs.new }
 
+  let(:url) { URI('http://myrpc.local/') }
   let(:faraday_connection) do
-    Faraday.new do |builder|
+    Faraday.new(url: url) do |builder|
       builder.adapter :test, faraday_stabs
     end
   end
@@ -39,28 +40,6 @@ RSpec.describe Thrift::FaradayTransport do
       it 'set faraday_connection' do
         expect(transport.faraday_connection).to eq faraday_connection
       end
-
-      it 'not set path' do
-        expect(transport.path).to be described_class::DEFAULT_PATH
-      end
-    end
-
-    context 'with faraday_connection and path' do
-      subject(:transport) do
-        described_class.new(faraday_connection, path: path)
-      end
-
-      let(:path) { 'custom prefix' }
-
-      it { expect { transport }.not_to raise_error }
-
-      it 'set faraday_connection' do
-        expect(transport.faraday_connection).to eq faraday_connection
-      end
-
-      it 'not set path' do
-        expect(transport.path).to be path
-      end
     end
   end
 
@@ -73,13 +52,13 @@ RSpec.describe Thrift::FaradayTransport do
   describe '#flush' do
     subject(:flush) { transport.flush }
 
+    let(:transport) { described_class.new(faraday_connection) }
+
     let(:request_body) { SecureRandom.random_bytes(16) }
     let(:response_body) { SecureRandom.random_bytes(32) }
     let(:headers) { described_class::BASE_HEADERS }
 
-    context 'with transport not have path' do
-      let(:transport) { described_class.new(faraday_connection) }
-
+    context 'with transport url not have path' do
       before 'prepare flush' do
         transport.write(request_body)
         faraday_stabs.post('/', request_body, headers) do |_env|
@@ -93,9 +72,9 @@ RSpec.describe Thrift::FaradayTransport do
       end
     end
 
-    context 'with transport have path' do
+    context 'with transport url have path' do
       let(:path) { '/custom/prefix' }
-      let(:transport) { described_class.new(faraday_connection, path: path) }
+      let(:url) { super().merge(path) }
 
       before 'prepare flush' do
         transport.write(request_body)
@@ -111,7 +90,6 @@ RSpec.describe Thrift::FaradayTransport do
     end
 
     context 'when flush called not first time' do
-      let(:transport) { described_class.new(faraday_connection) }
       let(:other_request_body) { SecureRandom.random_bytes(20) }
       let(:other_response_body) { SecureRandom.random_bytes(40) }
 
@@ -138,7 +116,6 @@ RSpec.describe Thrift::FaradayTransport do
     end
 
     context 'when adapter raise error on prev flush' do
-      let(:transport) { described_class.new(faraday_connection) }
       let(:other_request_body) { SecureRandom.random_bytes(20) }
       let(:other_response_body) { SecureRandom.random_bytes(40) }
 
