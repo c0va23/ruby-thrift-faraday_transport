@@ -24,7 +24,19 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+```ruby
+require 'uri'
+require 'net/http/persistent'
+
+url = URI('http://mytriftserver:12345/endpoint')
+
+faraday_connection = Faraday.new(url: url) do |f|
+  f.adapter :net_http_persistent
+end
+transport = ::Thrift::FaradayTransport.new(faraday_connection)
+protocol = ::Thrift::BinaryProtocol.new(transport)
+transport.open
+```
 
 ## Development
 
