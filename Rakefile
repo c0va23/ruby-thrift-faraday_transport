@@ -7,6 +7,10 @@ require 'rubocop/rake_task'
 
 RuboCop::RakeTask.new
 
+require 'yard/rake/yardoc_task'
+
+YARD::Rake::YardocTask.new
+
 # rubocop:disable Style/HashSyntax
 
 task :default => %i[rubocop spec]

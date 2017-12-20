@@ -25,7 +25,10 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rspec', '~> 3.0'
   spec.add_development_dependency 'rubocop', '~> 0.52.0'
   spec.add_development_dependency 'rubocop-rspec', '~> 1.21.0'
+  spec.add_development_dependency 'yard', '~> 0.9.11'
 
   spec.add_dependency 'faraday', '~> 0.9.0'
   spec.add_dependency 'thrift', '~> 0.9.0'
+
+  spec.metadata['yard.run'] = 'yard'
 end
