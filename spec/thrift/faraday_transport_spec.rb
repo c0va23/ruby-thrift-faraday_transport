@@ -1,10 +1,18 @@
 require 'spec_helper'
-require 'faraday'
+require 'securerandom'
 
 RSpec.describe Thrift::FaradayTransport do
   subject { described_class.new(faraday_connection) }
 
-  let(:faraday_connection) { Faraday.new }
+  let(:faraday_stabs) { Faraday::Adapter::Test::Stubs.new }
+
+  let(:faraday_connection) do
+    Faraday.new do |builder|
+      builder.adapter :test, faraday_stabs
+    end
+  end
+
+  after { faraday_stabs.verify_stubbed_calls }
 
   it 'has a version number' do
     expect(described_class::VERSION).to eq(
@@ -60,5 +68,29 @@ RSpec.describe Thrift::FaradayTransport do
     subject { super().open? }
 
     it { is_expected.to be true }
+  end
+
+  describe '#flush' do
+    let(:request_body) { SecureRandom.random_bytes(16) }
+    let(:response_body) { SecureRandom.random_bytes(32) }
+    let(:headers) { described_class::BASE_HEADERS }
+
+    context 'with transport not have path' do
+      subject(:flush) { transport.flush }
+
+      let(:transport) { described_class.new(faraday_connection) }
+
+      before do
+        transport.write(request_body)
+        faraday_stabs.post('/', request_body, headers) do |_env|
+          [200, described_class::BASE_HEADERS, response_body]
+        end
+      end
+
+      it 'call post thrift data via adapter' do
+        flush
+        expect(transport.read(response_body.size)).to eq response_body
+      end
+    end
   end
 end
