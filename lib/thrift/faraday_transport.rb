@@ -9,7 +9,7 @@ module Thrift
     BASE_HEADERS = { 'Content-Type' => 'application/x-thrift' }.freeze
     DEFAULT_PATH = '/'.freeze
 
-    attr_reader :faraday_connection
+    attr_reader :faraday_connection, :path
 
     # Public: Initialize new FaradayTransport
     #
@@ -17,7 +17,7 @@ module Thrift
     # path - optional endpoin path (Default: '/')
     #
     # Returns new Thrift::FaradayTransport
-    def initialize(faraday_connection, path: nil)
+    def initialize(faraday_connection, path: DEFAULT_PATH)
       @faraday_connection = faraday_connection
       @path = path
       flush_out_buffer
@@ -45,9 +45,7 @@ module Thrift
       flush_out_buffer
     end
 
-    def path
-      @path || DEFAULT_PATH
-    end
+    private
 
     def flush_out_buffer
       @out_buffer = Bytes.empty_byte_buffer
