@@ -6,4 +6,8 @@ RSpec.describe Thrift::FaradayTransport do
       File.read(File.expand_path('../../VERSION', __dir__))
     )
   end
+
+  it 'inherit Thrift::BaseTransport' do
+    is_expected.to be_a Thrift::BaseTransport
+  end
 end
