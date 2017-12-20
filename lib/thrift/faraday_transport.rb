@@ -14,6 +14,7 @@ module Thrift
     # Public: Initialize new FaradayTransport
     #
     # faraday_connection - instance of Faraday::Connection
+    # path - optional endpoin path (Default: '/')
     #
     # Returns new Thrift::FaradayTransport
     def initialize(faraday_connection, path: nil)
