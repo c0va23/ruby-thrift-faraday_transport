@@ -1,11 +1,10 @@
 
 lib = File.expand_path("../lib", __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require "thrift/faraday_transport"
 
 Gem::Specification.new do |spec|
   spec.name          = "thrift-faraday_transport"
-  spec.version       = Thrift::FaradayTransport::VERSION
+  spec.version       = File.read(__dir__ + '/VERSION')
   spec.authors       = ["Dmitrij Fedorenko"]
   spec.email         = ["<c0va23@gmail.com>"]
 

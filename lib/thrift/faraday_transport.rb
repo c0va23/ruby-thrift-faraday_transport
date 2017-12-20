@@ -1,5 +1,5 @@
 module Thrift
   class FaradayTransport
-    VERSION = "0.1.0"
+    VERSION = Gem.loaded_specs["thrift-faraday_transport"].version.to_s
   end
 end
