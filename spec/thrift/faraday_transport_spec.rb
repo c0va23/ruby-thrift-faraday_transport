@@ -136,5 +136,35 @@ RSpec.describe Thrift::FaradayTransport do
         expect(transport.read(response_body.size)).to eq response_body
       end
     end
+
+    context 'when adapter raise error on prev flush' do
+      let(:transport) { described_class.new(faraday_connection) }
+      let(:other_request_body) { SecureRandom.random_bytes(20) }
+      let(:other_response_body) { SecureRandom.random_bytes(40) }
+
+      before 'first failed flush' do
+        faraday_stabs.post('/', other_request_body, headers) do |_env|
+          raise Faraday::ClientError, Exception.new
+        end
+        transport.write(other_request_body)
+        begin
+          transport.flush
+        rescue Faraday::ClientError
+          :ok
+        end
+      end
+
+      before 'prepare flush' do
+        faraday_stabs.post('/', request_body, headers) do |_env|
+          [200, described_class::BASE_HEADERS, response_body]
+        end
+        transport.write(request_body)
+      end
+
+      it 'allow read valid response body' do
+        flush
+        expect(transport.read(response_body.size)).to eq response_body
+      end
+    end
   end
 end

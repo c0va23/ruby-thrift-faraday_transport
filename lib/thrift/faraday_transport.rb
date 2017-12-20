@@ -40,7 +40,7 @@ module Thrift
         request.headers.merge!(BASE_HEADERS)
       end
       @in_buffer = StringIO.new(response.body)
-      # ensure
+    ensure
       flush_out_buffer
     end
 
