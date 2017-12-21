@@ -3,7 +3,7 @@ require 'faraday'
 require 'stringio'
 
 module Thrift
-  # Public: Faraday transport for Thrift
+  # Faraday HTTP-transport for Thrift
   class FaradayTransport < Thrift::BaseTransport
     VERSION = Gem.loaded_specs['thrift-faraday_transport'].version.to_s
     BASE_HEADERS = { 'Content-Type' => 'application/x-thrift' }.freeze
