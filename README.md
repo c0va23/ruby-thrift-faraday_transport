@@ -6,6 +6,10 @@ HTTP transport basen on [Faraday](https://github.com/lostisland/faraday).
 It GEM allow use any HTTP-adapter supported by Faraday as HTTP-transport for
 Thrift. See [Usage](#Usage) for examples.
 
+## Documentation
+
+http://www.rubydoc.info/github/c0va23/ruby-thrift-faraday-transport/
+
 ## Installation
 
 Add this line to your application's Gemfile:
