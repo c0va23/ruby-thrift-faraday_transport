@@ -38,7 +38,8 @@ module Thrift
         request.body = @out_buffer
         request.headers.merge!(BASE_HEADERS)
       end
-      @in_buffer = StringIO.new(response.body)
+      body = Bytes.force_binary_encoding(response.body)
+      @in_buffer = StringIO.new(body)
     ensure
       flush_out_buffer
     end
