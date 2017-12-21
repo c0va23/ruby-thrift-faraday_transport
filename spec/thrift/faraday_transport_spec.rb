@@ -106,6 +106,22 @@ RSpec.describe Thrift::FaradayTransport do
       end
     end
 
+    context 'with faraday raise error' do
+      let(:path) { '/invalidpath' }
+      let(:url) { super().merge(path) }
+
+      before 'prepare flush' do
+        transport.write(request_body)
+        faraday_stabs.post(path, request_body, headers) do |_env|
+          raise Faraday::ClientError, Exception.new('Custom Faraday error')
+        end
+      end
+
+      it 'raise wrapped exception' do
+        expect { flush }.to raise_error(described_class::FaradayException)
+      end
+    end
+
     context 'when flush called not first time' do
       let(:other_request_body) { SecureRandom.random_bytes(20) }
       let(:other_response_body) { SecureRandom.random_bytes(40) }
@@ -143,7 +159,7 @@ RSpec.describe Thrift::FaradayTransport do
         transport.write(other_request_body)
         begin
           transport.flush
-        rescue Faraday::ClientError
+        rescue described_class::FaradayException
           :ok
         end
       end

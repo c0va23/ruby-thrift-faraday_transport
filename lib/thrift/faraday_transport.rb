@@ -16,6 +16,13 @@ module Thrift
       end
     end
 
+    # Faraday exception raise #flush
+    class FaradayException < TransportException
+      def initialize(faraday_exception)
+        super(TransportException::UNKNOWN, faraday_exception.inspect)
+      end
+    end
+
     # @return [Faraday::Connection] attribute faraday_connection
     attr_reader :faraday_connection
 
@@ -44,11 +51,9 @@ module Thrift
     # Perform HTTP request. Implement Thrift::BaseTransport#flush
     #
     # @raise [UnexpectedHTTPCode] when HTTP server respond with not 200 status
+    # @raise [FaradayException] on Faraday client exception
     def flush
-      response = @faraday_connection.post do |request|
-        request.body = @out_buffer
-        request.headers.merge!(BASE_HEADERS)
-      end
+      response = perform_request
       raise UnexpectedHTTPCode, response.status if response.status != 200
       body = Bytes.force_binary_encoding(response.body)
       @in_buffer = StringIO.new(body)
@@ -60,6 +65,15 @@ module Thrift
 
     def flush_out_buffer
       @out_buffer = Bytes.empty_byte_buffer
+    end
+
+    def perform_request
+      @faraday_connection.post do |request|
+        request.body = @out_buffer
+        request.headers.merge!(BASE_HEADERS)
+      end
+    rescue Faraday::ClientError => e
+      raise FaradayException, e
     end
   end
 end
