@@ -1,6 +1,6 @@
 # Thrift::FaradayTransport
 
-Ruby GEM implemented [Thrif](https://github.com/apache/thrift/tree/master/lib/rb)
+Ruby GEM implemented [Thrift](https://github.com/apache/thrift/tree/master/lib/rb)
 HTTP transport basen on [Faraday](https://github.com/lostisland/faraday).
 
 It GEM allow use any HTTP-adapter supported by Faraday as HTTP-transport for
