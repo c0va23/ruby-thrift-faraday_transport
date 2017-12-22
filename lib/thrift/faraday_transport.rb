@@ -48,10 +48,16 @@ module Thrift
       true
     end
 
+    # Implement Thrift::BaseTransport#write
+    #
+    # @param data [String]
     def write(data)
       @out_buffer << data
     end
 
+    # Implement Thrift::BaseTransport#read
+    #
+    # @param size [Integer]
     def read(size)
       @in_buffer.read(size)
     end
