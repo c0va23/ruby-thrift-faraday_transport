@@ -5,11 +5,16 @@ require 'stringio'
 module Thrift
   # Faraday HTTP-transport for Thrift
   class FaradayTransport < Thrift::BaseTransport
+    # Gem trhfit-faraday_transport version
     VERSION = Gem.loaded_specs['thrift-faraday_transport'].version.to_s
+    # Base headers for response
     BASE_HEADERS = { 'Content-Type' => 'application/x-thrift' }.freeze
 
     # Unexpected HTTP code raise #flush when HTTP respond with not 200 status
     class UnexpectedHTTPCode < TransportException
+      # Initialize new UnexpectedHTTPCode
+      #
+      # @param http_code [Integer] - response http code
       def initialize(http_code)
         super(TransportException::UNKNOWN, "Invalid HTTP code #{http_code}")
         @http_code = http_code
@@ -18,6 +23,9 @@ module Thrift
 
     # Faraday exception raise #flush
     class FaradayException < TransportException
+      # Initialize new FaradayException
+      #
+      # @param faraday_exception [Faraday::ClientError]
       def initialize(faraday_exception)
         super(TransportException::UNKNOWN, faraday_exception.inspect)
       end
@@ -40,10 +48,16 @@ module Thrift
       true
     end
 
+    # Implement Thrift::BaseTransport#write
+    #
+    # @param data [String]
     def write(data)
       @out_buffer << data
     end
 
+    # Implement Thrift::BaseTransport#read
+    #
+    # @param size [Integer]
     def read(size)
       @in_buffer.read(size)
     end
