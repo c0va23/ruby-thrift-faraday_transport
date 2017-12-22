@@ -10,6 +10,9 @@ module Thrift
 
     # Unexpected HTTP code raise #flush when HTTP respond with not 200 status
     class UnexpectedHTTPCode < TransportException
+      # Initialize new UnexpectedHTTPCode
+      #
+      # @param http_code [Integer] - response http code
       def initialize(http_code)
         super(TransportException::UNKNOWN, "Invalid HTTP code #{http_code}")
         @http_code = http_code
@@ -18,6 +21,9 @@ module Thrift
 
     # Faraday exception raise #flush
     class FaradayException < TransportException
+      # Initialize new FaradayException
+      #
+      # @param faraday_exception [Faraday::ClientError]
       def initialize(faraday_exception)
         super(TransportException::UNKNOWN, faraday_exception.inspect)
       end
