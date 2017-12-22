@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    thrift-faraday_transport (0.0.1)
+    thrift-faraday_transport (0.1.0)
       faraday (~> 0.9.0)
       thrift (~> 0.9.0)
 
