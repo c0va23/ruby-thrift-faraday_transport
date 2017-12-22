@@ -1,6 +1,7 @@
 # Thrift::FaradayTransport
 
 [![Build Status](https://travis-ci.org/c0va23/ruby-thrift-faraday-transport.svg?branch=feature%2Fconfigure-travis)](https://travis-ci.org/c0va23/ruby-thrift-faraday-transport)
+[![Inline docs](http://inch-ci.org/github/c0va23/ruby-thrift-faraday-transport.svg?branch=master)](http://inch-ci.org/github/c0va23/ruby-thrift-faraday-transport)
 
 Ruby GEM implemented [Thrift](https://github.com/apache/thrift/tree/master/lib/rb)
 HTTP transport basen on [Faraday](https://github.com/lostisland/faraday).
