@@ -5,7 +5,9 @@ require 'stringio'
 module Thrift
   # Faraday HTTP-transport for Thrift
   class FaradayTransport < Thrift::BaseTransport
+    # Gem trhfit-faraday_transport version
     VERSION = Gem.loaded_specs['thrift-faraday_transport'].version.to_s
+    # Base headers for response
     BASE_HEADERS = { 'Content-Type' => 'application/x-thrift' }.freeze
 
     # Unexpected HTTP code raise #flush when HTTP respond with not 200 status
