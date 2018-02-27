@@ -17,9 +17,7 @@ http://www.rubydoc.info/github/c0va23/ruby-thrift-faraday_transport/
 
 Add this line to your application's Gemfile:
 
-```ruby
-gem 'thrift-faraday_transport'
-```
+    gem 'thrift-faraday_transport'
 
 And then execute:
 
@@ -31,20 +29,18 @@ Or install it yourself as:
 
 ## Usage
 
-```ruby
-require 'uri'
-require 'net/http/persistent'
+    require 'uri'
+    require 'net/http/persistent'
 
-url = URI('http://mytriftserver:12345/endpoint')
+    url = URI('http://mytriftserver:12345/endpoint')
 
-faraday_connection = Faraday.new(url: url) do |f|
-  f.adapter :net_http_persistent
-  f.options.timeout = 30
-end
-transport = ::Thrift::FaradayTransport.new(faraday_connection)
-protocol = ::Thrift::BinaryProtocol.new(transport)
-thrift_client = RpcService::Client.new(protocol)
-```
+    faraday_connection = Faraday.new(url: url) do |f|
+      f.adapter :net_http_persistent
+      f.options.timeout = 30
+    end
+    transport = ::Thrift::FaradayTransport.new(faraday_connection)
+    protocol = ::Thrift::BinaryProtocol.new(transport)
+    thrift_client = RpcService::Client.new(protocol)
 
 ## Development
 
