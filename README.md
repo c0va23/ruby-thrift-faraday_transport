@@ -39,6 +39,7 @@ url = URI('http://mytriftserver:12345/endpoint')
 
 faraday_connection = Faraday.new(url: url) do |f|
   f.adapter :net_http_persistent
+  f.options.timeout = 30
 end
 transport = ::Thrift::FaradayTransport.new(faraday_connection)
 protocol = ::Thrift::BinaryProtocol.new(transport)
