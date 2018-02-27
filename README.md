@@ -42,7 +42,7 @@ faraday_connection = Faraday.new(url: url) do |f|
 end
 transport = ::Thrift::FaradayTransport.new(faraday_connection)
 protocol = ::Thrift::BinaryProtocol.new(transport)
-transport.open
+thrift_client = RpcService::Client.new(protocol)
 ```
 
 ## Development
