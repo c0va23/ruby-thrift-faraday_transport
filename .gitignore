@@ -1,3 +1,4 @@
 .rspec_status
 doc/
 .yardoc/
+.rake_tasks~
