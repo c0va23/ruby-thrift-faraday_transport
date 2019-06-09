@@ -4,7 +4,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |spec|
   spec.name          = 'thrift-faraday_transport'
-  spec.version       = File.read(__dir__ + '/VERSION')
+  spec.version       = File.read(__dir__ + '/VERSION').strip
   spec.authors       = ['Dmitrij Fedorenko']
   spec.email         = ['<c0va23@gmail.com>']
 
@@ -28,7 +28,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'yard', '~> 0.9.11'
 
   spec.add_dependency 'faraday', '~> 0.9.0'
-  spec.add_dependency 'thrift', '~> 0.9.0'
+  spec.add_dependency 'thrift', '>= 0.9', '< 0.12'
 
   spec.metadata['yard.run'] = 'yard'
 end
